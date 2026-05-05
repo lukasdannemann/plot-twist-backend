@@ -43,6 +43,9 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.set("trust proxy", 1);
+app.use(globalLimiter);
+
 // Routes
 app.get("/", (req, res) => {
   res.json({
@@ -58,9 +61,6 @@ app.use("/trades", tradesRouter);
 app.use("/products", productsRouter);
 app.use("/auth", authRouter);
 app.use("/me", meRouter);
-//TODO: Add more routes as needed
 
-app.set("trust proxy", 1);
-app.use(globalLimiter);
 
 export default app;

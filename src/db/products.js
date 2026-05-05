@@ -22,9 +22,7 @@ export async function createProduct(productData) {
 
 export async function updateProduct(id, updateData) {
   try {
-    // 1. Vi skickar in ID:t på produkten
-    // 2. Vi skickar in den nya datan (updateData)
-    // 3. Vi skickar med ett options-objekt
+  
     const updatedProduct = await Product.findByIdAndUpdate(
       id,
       updateData,
@@ -57,4 +55,3 @@ export async function deleteProduct(id) {
     throw error;
   }
 }
-//TODO: Add more functions as needed

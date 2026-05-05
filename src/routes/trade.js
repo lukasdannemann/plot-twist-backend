@@ -118,7 +118,7 @@ router.put("/:id", requireAuth, validateTradeStatus, validateTradeResult, async 
     
     const isParticipant = requesterId === req.user.id || receiverId === req.user.id;
     const isReceiver = receiverId === req.user.id;
-    const isRequester = requesterId === req.user.id; // Lade till denna för tydlighet!
+    const isRequester = requesterId === req.user.id;
 
     if (status === "completed" && !isParticipant) {
       return res.status(403).json({ message: "Only trade participants can mark trade as completed" });
@@ -128,7 +128,6 @@ router.put("/:id", requireAuth, validateTradeStatus, validateTradeResult, async 
       return res.status(403).json({ message: "Only the requester can cancel a trade" });
     }
 
-    // Fixen: Vi tillåter nu att requester skickar "cancelled" utan att fastna här!
     if (status !== "completed" && status !== "cancelled" && !isReceiver) {
       return res.status(403).json({ message: "Only the receiver can update this status" });
     }
@@ -153,7 +152,6 @@ router.put("/:id", requireAuth, validateTradeStatus, validateTradeResult, async 
       existingTrade.meetingPlace = req.body.meetingPlace;
       existingTrade.meetingTime = req.body.meetingTime;
 
-      // Ett litet tips: Om meetingPlace nu är ett objekt (lat/lng) blir texten "[object Object]". 
       const meetingTimeFormatted = req.body.meetingTime ? new Date(req.body.meetingTime).toLocaleString("sv-SE") : "Ingen tid vald";
 
       await createNotification({

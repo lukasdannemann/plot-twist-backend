@@ -92,7 +92,6 @@ router.post("/refresh", async (req, res) => {
     // Kolla om token är giltig
     const decodedToken = verifyRefreshToken(refreshToken);
 
-    // Om den är giltig, skapa en NY access token
     const newAccessToken = generateAccessToken({ id: decodedToken.id });
 
     res.json({ accessToken: newAccessToken });
@@ -129,5 +128,4 @@ router.get("/:id/trades", async (req, res) => {
     res.status(500).json({ message: "Failed to fetch trades" });
   }
 });
-// TODO: Dubbelkolla att trades hanteras korrekt när routes är klara
 export default router;

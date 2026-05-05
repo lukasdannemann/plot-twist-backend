@@ -2,7 +2,7 @@ import Trade from "../models/Trade.js";
 import { createNotification } from "./notifications.js";
 
 export async function getTrades() {
-  // return await Trade.find().populate("requester receiver product");
+
   return await Trade.find().populate([
     { path: "requester", select: "-password -email" },
     { path: "receiver", select: "-password -email" },
@@ -29,7 +29,6 @@ export async function createTrade(tradeData) {
   }
 }
 
-// Uppdaterad med extraData = {}
 export async function updateTradeStatus(tradeId, userId, status, extraData = {}) {
   const trade = await Trade.findById(tradeId).populate("product");
 
@@ -37,17 +36,12 @@ export async function updateTradeStatus(tradeId, userId, status, extraData = {})
     throw new Error("Trade not found");
   }
 
-  // if (trade.receiver.toString() !== userId) {
-  //   throw new Error("Not authorized to update this trade");
-  // }
-
   if (trade.status !== "pending" && status !== "completed") {
     throw new Error("Trade is already processed");
   }
 
   trade.status = status;
 
-  // Sparar datum och plats om bytet godkänns
   if (status === "accepted") {
     if (extraData.meetingTime) {
       trade.meetingTime = extraData.meetingTime;
@@ -59,7 +53,6 @@ export async function updateTradeStatus(tradeId, userId, status, extraData = {})
 
   await trade.save();
 
-  // Skapar notifikation formaterad exakt enligt ditt nya schema
   await createNotification({
     user: trade.requester,
     message: `Your trade request for ${trade.product.name} was ${status}`,

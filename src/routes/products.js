@@ -27,10 +27,14 @@ function parseProductFormData(req, res, next) {
   }
 }
 
+//GET ALL PRODUCTS
+
 router.get("/", productsReadLimiter, async (req, res) => {
   const products = await getProducts();
   res.json(products);
 });
+
+//GET PRODUCT BY ID
 
 router.get("/:id", productsReadLimiter, validateId, async (req, res) => {
   try {
@@ -47,9 +51,7 @@ router.get("/:id", productsReadLimiter, validateId, async (req, res) => {
   }
 });
 
-//TODO: Add more routes as needed
-
-//TODO GET /products/:slug
+//CREATE NEW PRODUCT
 
 router.post("/", requireAuth,upload.single("image"), parseProductFormData, validateProduct, async (req, res) => {
   try {
@@ -70,6 +72,8 @@ router.post("/", requireAuth,upload.single("image"), parseProductFormData, valid
     return res.status(500).json({ message: "Server error" });
   }
 });
+
+//UPDATE PRODUCT
 
 router.patch("/:id", requireAuth, validateId, validateProductUpdate, async (req, res) => {
   try {
@@ -100,6 +104,8 @@ router.patch("/:id", requireAuth, validateId, validateProductUpdate, async (req,
   }
 });
 
+//DELETE PRODUCT
+
 router.delete("/:id", requireAuth, validateId, async (req, res) => {
   try {
     const { id } = req.params;
@@ -125,7 +131,4 @@ router.delete("/:id", requireAuth, validateId, async (req, res) => {
   }
 });
 
-//TODO PUT /products/:slug
-
-//TODO DELETE /products/:slug
 export default router;
